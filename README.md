@@ -1,7 +1,7 @@
 # CloudGen Essentials 
 
 ## Introduction
-Tools to practice and enjoy CloudGen Firewall and WAF from Barracuda!
+Tools to enjoy automation of Barracuda CloudGen Firewall and WAF.
 
 ## Tools
 - Ansible. Based on the itech/ansible repo.
