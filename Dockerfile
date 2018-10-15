@@ -23,7 +23,7 @@ RUN mkdir -p /etc/ansible/ \
 RUN pip install --pre azure azure-cli awscli
 
 # Install Terraform
-ENV TERRAFORM_VERSION 0.11.7
+ENV TERRAFORM_VERSION 0.11.8
 
 RUN wget -O terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
   && unzip terraform.zip -d /usr/local/bin \
