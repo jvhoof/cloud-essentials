@@ -19,6 +19,9 @@ RUN mkdir -p /etc/ansible/ \
     && echo '[local]\nlocalhost\n' > /etc/ansible/hosts \
     && pip install ansible 
 
+# Install packaging for ARM Template deployments via Ansible
+RUN pip install packaging
+
 # Install Azure SDK for Python, Azure CLI 2.0 and AWS CLI
 RUN pip install --pre azure azure-cli awscli
 
