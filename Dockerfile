@@ -20,10 +20,10 @@ RUN mkdir -p /etc/ansible/ \
 RUN pip install ansible
 
 # Install Azure extension for Ansible
-RUN pip install ansible[azure]
+RUN pip install ansible[azure] azure-cli awscli
 
 # Install Azure SDK for Python, Azure CLI 2.0 and AWS CLI
-RUN pip install --pre azure-cli awscli
+#RUN pip install --pre azure-cli awscli
 
 # Install Terraform
 ENV TERRAFORM_VERSION 0.11.10
