@@ -17,7 +17,7 @@ RUN apt-get -y update \
 # Install Ansible
 RUN mkdir -p /etc/ansible/ \
     && echo '[local]\nlocalhost\n' > /etc/ansible/hosts \
-    && pip install ansible 
+    && pip install ansible ansible[azure]
 
 # Install packaging for ARM Template deployments via Ansible
 RUN pip install packaging
