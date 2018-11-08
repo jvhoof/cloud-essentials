@@ -19,6 +19,7 @@ RUN mkdir -p /etc/ansible/ \
     && echo '[local]\nlocalhost\n' > /etc/ansible/hosts
 RUN pip install ansible
 
+RUN pip install cryptography==2.1.4
 # Install Azure extension for Ansible
 RUN pip install ansible[azure] azure-cli awscli
 
