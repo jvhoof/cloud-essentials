@@ -12,12 +12,12 @@ RUN apt-get -y update \
                python-paramiko python-setuptools python-mysqldb \
                python-pkg-resources git python-pip sshpass \
                openssh-client rsync curl wget unzip locales \
-               python-wheel python-pathlib2 graphviz
+               zile byobu python-wheel python-pathlib2 graphviz
 
 # Install Ansible
 RUN mkdir -p /etc/ansible/ \
     && echo '[local]\nlocalhost\n' > /etc/ansible/hosts
-RUN pip install ansible
+RUN pip install ansible fortiosapi
 
 RUN pip install cryptography==2.1.4
 # Install Azure extension for Ansible
@@ -27,14 +27,14 @@ RUN pip install ansible[azure] azure-cli awscli
 #RUN pip install --pre azure-cli awscli
 
 # Install Terraform
-ENV TERRAFORM_VERSION 0.11.13
+ENV TERRAFORM_VERSION 0.11.14
 
 RUN wget -O terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
   && unzip terraform.zip -d /usr/local/bin \
   && rm -f terraform.zip
 
 # Install Packer
-ENV PACKER_VERSION 1.4.0
+ENV PACKER_VERSION 1.4.1
 
 RUN wget -O packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip \
   && unzip packer.zip -d /usr/local/bin \
