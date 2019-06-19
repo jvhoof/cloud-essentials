@@ -12,16 +12,17 @@ RUN apt-get -y update \
                python-paramiko python-setuptools python-mysqldb \
                python-pkg-resources git python-pip sshpass \
                openssh-client rsync curl wget unzip locales \
-               zile byobu python-wheel python-pathlib2 graphviz
+               zile byobu python-wheel python-pathlib2 graphviz \
+               python3 python3-pip
 
 # Install Ansible
 RUN mkdir -p /etc/ansible/ \
     && echo '[local]\nlocalhost\n' > /etc/ansible/hosts
-RUN pip install ansible fortiosapi
+RUN pip3 install ansible fortiosapi
 
-RUN pip install cryptography==2.1.4
+RUN pip3 install cryptography==2.1.4
 # Install Azure extension for Ansible
-RUN pip install ansible[azure] azure-cli awscli
+RUN pip3 install ansible[azure] azure-cli awscli
 
 # Install Azure SDK for Python, Azure CLI 2.0 and AWS CLI
 #RUN pip install --pre azure-cli awscli
