@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -y update \
     && apt-get -y upgrade \
-    && apt-get -y --no-install-recommends install 
+    && apt-get -y --no-install-recommends install \
                sshpass openssh-client rsync curl wget unzip locales \
                zile byobu graphviz \
                python3 python3-pip python3-setuptools
@@ -15,11 +15,11 @@ RUN apt-get -y update \
 # Install Ansible
 RUN mkdir -p /etc/ansible/ \
     && echo '[local]\nlocalhost\n' > /etc/ansible/hosts
-RUN pip3 install ansible fortiosapi
+RUN pip3 install ansible fortiosapi ansible[azure] azure-cli awscli
 
 #RUN pip3 install cryptography==2.1.4
 # Install Azure extension for Ansible
-RUN pip3 install ansible[azure] azure-cli awscli
+#RUN pip3 install ansible[azure] azure-cli awscli
 
 # Install Azure SDK for Python, Azure CLI 2.0 and AWS CLI
 #RUN pip install --pre azure-cli awscli
