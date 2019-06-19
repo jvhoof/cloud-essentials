@@ -13,7 +13,7 @@ RUN apt-get -y update \
                python-pkg-resources git python-pip sshpass \
                openssh-client rsync curl wget unzip locales \
                zile byobu python-wheel python-pathlib2 graphviz \
-               python3 python3-pip
+               python3 python3-pip python3-setuptools
 
 # Install Ansible
 RUN mkdir -p /etc/ansible/ \
