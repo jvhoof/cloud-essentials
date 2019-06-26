@@ -13,7 +13,7 @@ RUN apt-get -y update \
 
 # Install Ansible
 RUN mkdir -p /etc/ansible/ \
-    && echo '[local]\nlocalhost\n' > /etc/ansible/hosts && echo '[defaults]\ninterpreter_python=/usr/bin/python3\n' > /etc/ansible/ansible.cfg
+    && echo '[local]\nlocalhost ansible_python_interpreter={{ansible_playbook_python}}\n' > /etc/ansible/hosts && echo '[defaults]\ninterpreter_python=/usr/bin/python3\n' > /etc/ansible/ansible.cfg
 RUN pip3 install ansible fortiosapi ansible[azure] azure-cli awscli
 
 #RUN pip3 install cryptography==2.1.4
