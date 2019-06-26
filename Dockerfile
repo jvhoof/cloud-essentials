@@ -10,7 +10,7 @@ RUN apt-get -y update \
     && apt-get -y --no-install-recommends install \
                sshpass openssh-client rsync curl wget unzip locales \
                zile byobu python3 python3-dev \
-               python3-pip python3-venv python3-wheel python3-setuptools python3-psutil libssl-dev libffi-dev \
+               python3-pip python3-venv python3-wheel python3-setuptools python3-psutil libssl-dev libffi-dev 
 
 
 # Install Ansible
