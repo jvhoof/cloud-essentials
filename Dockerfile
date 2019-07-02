@@ -14,6 +14,8 @@ RUN apt-get -y update \
                python3 python3-dev \
                python3-pip python3-venv python3-wheel python3-setuptools python3-psutil libssl-dev libffi-dev 
 
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.5 2
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
 
 # Install Ansible
 RUN mkdir -p /etc/ansible/ \
