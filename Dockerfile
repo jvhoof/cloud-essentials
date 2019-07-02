@@ -25,7 +25,7 @@ RUN pip3 install ansible fortiosapi ansible[azure] azure-cli awscli netaddr pyFG
 RUN mkdir -p /opt/ansible/modules && \
     cd /opt/ansible/modules && \
     git clone https://github.com/networktocode/fortimanager-ansible && \
-    cd /opt/ansible/modules/fortimgr-ansible && \
+    cd /opt/ansible/modules/fortimanager-ansible && \
     pip3 install -r requirements.txt
 
 #RUN pip3 install cryptography==2.1.4
