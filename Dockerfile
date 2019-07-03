@@ -18,14 +18,16 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.5 2
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
 
 # Install Ansible
-RUN mkdir -p /etc/ansible/ \
-    && echo '[local]\nlocalhost ansible_python_interpreter={{ansible_playbook_python}}\n' > /etc/ansible/hosts && echo '[defaults]\ninterpreter_python=/usr/bin/python3\n' > /etc/ansible/ansible.cfg
+RUN mkdir -p /etc/ansible/ && \
+    echo '[local]\nlocalhost ansible_python_interpreter={{ansible_playbook_python}}\n' > /etc/ansible/hosts && \
+    echo '[defaults]\ninterpreter_python=/usr/bin/python3' > /etc/ansible/ansible.cfg
 RUN pip3 install ansible fortiosapi ansible[azure] azure-cli awscli netaddr pyFG
 
 RUN mkdir -p /opt/ansible/modules && \
     cd /opt/ansible/modules && \
     git clone https://github.com/networktocode/fortimanager-ansible && \
     cd /opt/ansible/modules/fortimanager-ansible && \
+    echo 'library        = /opt/ansible/modules/' >> /etc/ansible/ansible.cfg && \
     pip3 install -r requirements.txt
 
 #RUN pip3 install cryptography==2.1.4
