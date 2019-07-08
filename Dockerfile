@@ -25,7 +25,8 @@ RUN pip3 install ansible fortiosapi ansible[azure] azure-cli awscli netaddr pyFG
 
 RUN mkdir -p /opt/ansible/modules && \
     cd /opt/ansible/modules && \
-    git clone https://github.com/networktocode/fortimanager-ansible && \
+    git clone https://github.com/networktocode/fortimanager-ansible.git && \
+    git clone https://github.com/fortinet-solutions-cse/ansible_fgt_modules.git && \
     cd /opt/ansible/modules/fortimanager-ansible && \
     echo 'library        = /opt/ansible/modules/' >> /etc/ansible/ansible.cfg && \
     pip3 install -r requirements.txt
@@ -38,14 +39,14 @@ RUN mkdir -p /opt/ansible/modules && \
 #RUN pip install --pre azure-cli awscli
 
 # Install Terraform
-ENV TERRAFORM_VERSION 0.11.14
+ENV TERRAFORM_VERSION 0.12.3
 
 RUN wget -O terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
   && unzip terraform.zip -d /usr/local/bin \
   && rm -f terraform.zip
 
 # Install Packer
-ENV PACKER_VERSION 1.4.1
+ENV PACKER_VERSION 1.4.2
 
 RUN wget -O packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip \
   && unzip packer.zip -d /usr/local/bin \
