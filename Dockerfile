@@ -25,18 +25,21 @@ RUN pip3 install ansible fortiosapi ansible[azure] azure-cli awscli netaddr pyFG
 
 RUN mkdir -p /opt/ansible/modules && \
     cd /opt/ansible/modules && \
-    git clone https://github.com/networktocode/fortimanager-ansible && \
+    git clone https://github.com/networktocode/fortimanager-ansible.git && \
     git clone https://github.com/fortinet-solutions-cse/ansible_fgt_modules.git && \
     cd /opt/ansible/modules/fortimanager-ansible && \
     echo 'library        = /opt/ansible/modules/' >> /etc/ansible/ansible.cfg && \
-    pip3 install -r requirements.txt
-
-#RUN pip3 install cryptography==2.1.4
-# Install Azure extension for Ansible
-#RUN pip3 install ansible[azure] azure-cli awscli
-
-# Install Azure SDK for Python, Azure CLI 2.0 and AWS CLI
-#RUN pip install --pre azure-cli awscli
+    pip3 install -r requirements.txt && \
+    cd /tmp && \
+    git clone https://github.com/jvhoof/cloud-essentials.git && \
+    cd /opt/ansible/modules/fortimanager-ansible && \
+    # Patch as return_values function was removed from Ansible. Diff from PR
+    # https://github.com/networktocode/fortimanager-ansible/pull/70/files
+    patch -s -p0 < /tmp/cloud-essentials/misc/70.patch && \
+    # Patch to support v3 of the API for FortiManager
+    patch -s -p0 < /tmp/cloud-essentials/misc/71.patch && \
+    # Clean up of patches
+    rm -rf /tmp/cloud-essentials
 
 # Install Terraform
 ENV TERRAFORM_VERSION 0.11.14

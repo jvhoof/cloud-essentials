@@ -1,0 +1,50 @@
+--- library/fortimgr_jsonrpc_request.py	2019-07-09 09:21:42.594097000 +0000
++++ /data/misc/fortimgr_jsonrpc_request.py	2019-07-09 08:49:45.000000000 +0000
+@@ -128,11 +128,15 @@
+     sample: {"code": 0, "message": "OK"}  
+ '''
+ 
++import sys
+ import time
+ import requests
+ import json
++#from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
+ from ansible.module_utils.basic import AnsibleModule, env_fallback
+-from ansible.module_utils.fortimgr_return_values import return_values
++
++def return_values(obj):
++    yield str(obj)
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+@@ -1480,13 +1484,26 @@
+     else:
+         session.session = session_id
+ 
+-
+-
+-    body = {"method": method, "params": params, "session": session.session}
++    body = {"jsonrpc": "2.0", "id": "1", "method": method, "params": params, "session": session.session}
+     response = session.make_request(body).json()
++    print("RESPONSE ==>")
++    sys.stderr.write(json.dumps(response, indent=4))
++
++    result=response['result']
++    print("RESPONSE ==>")
++    sys.stderr.write(json.dumps(result, indent=4))
++    
++    if isinstance(result, dict):
++        # We're in FAZ API v3
++        #result=[{"status": {"code": 0, "message": "OK"}, "tid": tid}]
++        result_temp={"status": {"code": 0, "message": "OK"}}
++        result_temp.update(result)
++        result=[result_temp]
++        response['result'] = result
+ 
+     results = dict(changed=False, response=[response], status=response["result"][0]["status"])
+-     # build results
++
++    # build results
+     if response["result"][0]["status"]["code"] == 0:    # OK
+         if method in ["add", "set", "update", "delete", "move", "clone", "replace"]:
+             results.update(changed=True)

@@ -1,0 +1,379 @@
+From 5eeb722e001f8a6bb34f95fd9fb0ae00379ba1fd Mon Sep 17 00:00:00 2001
+From: Asher256 <Asher256@users.noreply.github.com>
+Date: Tue, 18 Jun 2019 17:37:15 -0400
+Subject: [PATCH] Fix the issue #68 (ImportError: cannot import name
+ return_values).
+
+The issue happened because the method "return_values" has been removed from Ansible:
+```
+Github repo: https://github.com/ansible/ansible
+commit aba4bed803fc783ea920798356eee196f7b56129
+Author: Sam Doran <sdoran@redhat.com>
+Date:   Mon Mar 4 17:02:44 2019 -0500
+
+    Move _handle_no_log_values() out of basic.py (#48628)
+
+    * Rename method and make private
+    * Use is_iterable, combine transformations
+    * Remove unused return_values from network modules
+    * Improve docstrings in new functions
+    * Add new PASS_VAR
+    * Add unit tests for list_no_log_values
+    * Fix unit tests for Python 2.6
+
+-def return_values(obj):
+-    """ Return native stringified values from datastructures.
+-
+-    For use with removing sensitive values pre-jsonification."""
+-    if isinstance(obj, (text_type, binary_type)):
+-        if obj:
+-            yield to_native(obj, errors='surrogate_or_strict')
+-        return
+-    elif isinstance(obj, SEQUENCETYPE):
+-        for element in obj:
+-            for subelement in return_values(element):
+-                yield subelement
+-    elif isinstance(obj, Mapping):
+-        for element in obj.items():
+-            for subelement in return_values(element[1]):
+-                yield subelement
+-    elif isinstance(obj, (bool, NoneType)):
+-        # This must come before int because bools are also ints
+-        return
+-    elif isinstance(obj, NUMBERTYPES):
+-        yield to_native(obj, nonstring='simplerepr')
+-    else:
+-        raise TypeError('Unknown parameter type: %s, %s' % (type(obj), obj))
+```
+---
+ library/fortimgr_address.py            |  3 +-
+ library/fortimgr_address_group.py      |  3 +-
+ library/fortimgr_address_map.py        |  3 +-
+ library/fortimgr_facts.py              |  3 +-
+ library/fortimgr_install.py            |  3 +-
+ library/fortimgr_ip_pool.py            |  3 +-
+ library/fortimgr_ip_pool_map.py        |  3 +-
+ library/fortimgr_jsonrpc_request.py    |  3 +-
+ library/fortimgr_lock.py               |  3 +-
+ library/fortimgr_policy.py             |  3 +-
+ library/fortimgr_revision.py           |  3 +-
+ library/fortimgr_route.py              |  3 +-
+ library/fortimgr_service.py            |  3 +-
+ library/fortimgr_service_group.py      |  3 +-
+ library/fortimgr_vip.py                |  3 +-
+ library/fortimgr_vip_group.py          |  3 +-
+ library/fortimgr_vip_map.py            |  3 +-
+ module_utils/fortimgr_return_values.py | 66 ++++++++++++++++++++++++++
+ 18 files changed, 100 insertions(+), 17 deletions(-)
+ create mode 100644 module_utils/fortimgr_return_values.py
+
+diff --git library/fortimgr_address.py b/library/fortimgr_address.py
+index dd52537..7cd7dd8 100644
+--- library/fortimgr_address.py
++++ b/library/fortimgr_address.py
+@@ -289,7 +289,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_address_group.py b/library/fortimgr_address_group.py
+index e62896e..70715e9 100644
+--- library/fortimgr_address_group.py
++++ b/library/fortimgr_address_group.py
+@@ -203,7 +203,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_address_map.py b/library/fortimgr_address_map.py
+index 3b84f2c..667582b 100644
+--- library/fortimgr_address_map.py
++++ b/library/fortimgr_address_map.py
+@@ -293,7 +293,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_facts.py b/library/fortimgr_facts.py
+index d1d126e..7ed06fc 100644
+--- library/fortimgr_facts.py
++++ b/library/fortimgr_facts.py
+@@ -237,7 +237,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_install.py b/library/fortimgr_install.py
+index 883be53..1587b37 100644
+--- library/fortimgr_install.py
++++ b/library/fortimgr_install.py
+@@ -194,7 +194,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_ip_pool.py b/library/fortimgr_ip_pool.py
+index 145b0f2..692461c 100644
+--- library/fortimgr_ip_pool.py
++++ b/library/fortimgr_ip_pool.py
+@@ -220,7 +220,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_ip_pool_map.py b/library/fortimgr_ip_pool_map.py
+index 6f4533b..37b7b02 100644
+--- library/fortimgr_ip_pool_map.py
++++ b/library/fortimgr_ip_pool_map.py
+@@ -259,7 +259,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_jsonrpc_request.py b/library/fortimgr_jsonrpc_request.py
+index 85990e6..68d2a3d 100644
+--- library/fortimgr_jsonrpc_request.py
++++ b/library/fortimgr_jsonrpc_request.py
+@@ -131,7 +131,8 @@
+ import time
+ import requests
+ import json
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_lock.py b/library/fortimgr_lock.py
+index 9a6caae..262b754 100644
+--- library/fortimgr_lock.py
++++ b/library/fortimgr_lock.py
+@@ -162,7 +162,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_policy.py b/library/fortimgr_policy.py
+index fab520c..234ae38 100644
+--- library/fortimgr_policy.py
++++ b/library/fortimgr_policy.py
+@@ -344,7 +344,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_revision.py b/library/fortimgr_revision.py
+index 42982c1..9b11f88 100644
+--- library/fortimgr_revision.py
++++ b/library/fortimgr_revision.py
+@@ -179,7 +179,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_route.py b/library/fortimgr_route.py
+index 86d24b1..cfefbc6 100644
+--- library/fortimgr_route.py
++++ b/library/fortimgr_route.py
+@@ -231,7 +231,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_service.py b/library/fortimgr_service.py
+index 1719afa..bee34cc 100644
+--- library/fortimgr_service.py
++++ b/library/fortimgr_service.py
+@@ -234,7 +234,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_service_group.py b/library/fortimgr_service_group.py
+index 09572d6..75a72bc 100644
+--- library/fortimgr_service_group.py
++++ b/library/fortimgr_service_group.py
+@@ -188,7 +188,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_vip.py b/library/fortimgr_vip.py
+index 0da577a..d4cb00d 100644
+--- library/fortimgr_vip.py
++++ b/library/fortimgr_vip.py
+@@ -219,7 +219,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_vip_group.py b/library/fortimgr_vip_group.py
+index 38622fd..a96c403 100644
+--- library/fortimgr_vip_group.py
++++ b/library/fortimgr_vip_group.py
+@@ -191,7 +191,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git library/fortimgr_vip_map.py b/library/fortimgr_vip_map.py
+index 54ea302..f6e6107 100644
+--- library/fortimgr_vip_map.py
++++ b/library/fortimgr_vip_map.py
+@@ -246,7 +246,8 @@
+ 
+ import time
+ import requests
+-from ansible.module_utils.basic import AnsibleModule, env_fallback, return_values
++from ansible.module_utils.basic import AnsibleModule, env_fallback
++from ansible.module_utils.fortimgr_return_values import return_values
+ 
+ requests.packages.urllib3.disable_warnings()
+ 
+diff --git module_utils/fortimgr_return_values.py b/module_utils/fortimgr_return_values.py
+new file mode 100644
+index 0000000..2247ea1
+--- /dev/null
++++ b/module_utils/fortimgr_return_values.py
+@@ -0,0 +1,66 @@
++#!/usr/bin/python
++#
++# This file is part of Ansible
++#
++# Ansible is free software: you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# Ansible is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
++#
++"""Return native stringified values from datastructures."""
++
++
++from ansible.module_utils.six import (
++    binary_type,
++    integer_types,
++    text_type,
++)
++
++
++from ansible.module_utils._text import to_native
++
++from ansible.module_utils.common._collections_compat import (
++    KeysView,
++    Mapping,
++    Sequence)
++
++# Note: When getting Sequence from collections, it matches with strings. If
++# this matters, make sure to check for strings before checking for sequencetype
++SEQUENCETYPE = frozenset, KeysView, Sequence
++
++NoneType = type(None)   # Python2 & 3 way to get NoneType
++NUMBERTYPES = tuple(list(integer_types) + [float])
++
++
++def return_values(obj):
++    """ Return native stringified values from datastructures.
++
++    For use with removing sensitive values pre-jsonification."""
++    if isinstance(obj, (text_type, binary_type)):
++        if obj:
++            yield to_native(obj, errors='surrogate_or_strict')
++        return
++    elif isinstance(obj, SEQUENCETYPE):
++        for element in obj:
++            for subelement in return_values(element):
++                yield subelement
++    elif isinstance(obj, Mapping):
++        for element in obj.items():
++            for subelement in return_values(element[1]):
++                yield subelement
++    elif isinstance(obj, (bool, NoneType)):
++        # This must come before int because bools are also ints
++        return
++    elif isinstance(obj, NUMBERTYPES):
++        yield to_native(obj, nonstring='simplerepr')
++    else:
++        raise TypeError('Unknown parameter type: %s, %s' % (type(obj), obj))
++
