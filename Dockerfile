@@ -21,7 +21,7 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
 RUN mkdir -p /etc/ansible/ && \
     echo '[local]\nlocalhost ansible_python_interpreter={{ansible_playbook_python}}\n' > /etc/ansible/hosts && \
     echo '[defaults]\ninterpreter_python=/usr/bin/python3' > /etc/ansible/ansible.cfg
-RUN pip3 install ansible fortiosapi ansible[azure] azure-cli awscli netaddr pyFG
+RUN pip3 install ansible fortiosapi ansible[azure] azure-cli awscli netaddr pyFG pexpect
 
 RUN mkdir -p /opt/ansible/modules && \
     cd /opt/ansible/modules && \
