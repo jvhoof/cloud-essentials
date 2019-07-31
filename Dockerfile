@@ -12,7 +12,7 @@ RUN apt-get -y update \
                wget unzip locales zile byobu git \
                build-essential \
                python3 python3-dev \
-               python3-pip python3-venv python3-wheel python3-setuptools python3-psutil libssl-dev libffi-dev 
+               python3-pip python3-venv python3-wheel python3-setuptools python3-psutil libssl-dev libffi-dev
 
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.5 2
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
@@ -21,7 +21,7 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
 RUN mkdir -p /etc/ansible/ && \
     echo '[local]\nlocalhost ansible_python_interpreter={{ansible_playbook_python}}\n' > /etc/ansible/hosts && \
     echo '[defaults]\ninterpreter_python=/usr/bin/python3' > /etc/ansible/ansible.cfg
-RUN pip3 install ansible fortiosapi ansible[azure] azure-cli awscli netaddr pyFG pexpect
+RUN pip3 install ansible fortiosapi ansible[azure] azure-cli awscli netaddr pyFG pexpect asciinema
 
 RUN mkdir -p /opt/ansible/modules && \
     cd /opt/ansible/modules && \
@@ -63,6 +63,6 @@ RUN dpkg-reconfigure locales && \
 ENV LC_ALL C.UTF-8
 
 # clean packages
-RUN apt-get clean \ 
+RUN apt-get clean \
     && apt-get purge --auto-remove -y python2.6 python2.6-minimal \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
