@@ -17,7 +17,9 @@ RUN apt-get -y update \
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 2
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
 
-# Install Ansible, Azure CLI, AWS CLI (has a requirement for colorama version 0.3.7), asciinema
+# Install Ansible, Azure CLI, asciinema
+# Dropped support for AWS CLI (has a requirement for colorama version 0.3.7) and AWS doesn't seem to update to the latest version 0.4.1.
+# https://github.com/aws/aws-cli/pull/2892
 RUN mkdir -p /etc/ansible/ && \
     echo '[local]\nlocalhost ansible_python_interpreter={{ansible_playbook_python}}\n' > /etc/ansible/hosts && \
     echo '[defaults]\ninterpreter_python=/usr/bin/python3' > /etc/ansible/ansible.cfg
