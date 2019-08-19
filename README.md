@@ -1,4 +1,4 @@
-# Cloud Essentials 
+# Cloud Essentials
 
 ## Introduction
 Tools to enjoy automation
@@ -13,7 +13,7 @@ Tools to enjoy automation
 - Fortinet Ansible modules for FortiGate and FortiManager/FortiAnalyzer
 
 ## Installation
-To run the container, simply pull or build the image into a docker host. 
+To run the container, simply pull or build the image into a docker host.
 ```
 docker pull jvhoof/cloud-essentials
 ```

@@ -42,7 +42,7 @@ RUN mkdir -p /opt/ansible/modules && \
     rm -rf /tmp/cloud-essentials
 
 # Install Terraform
-ENV TERRAFORM_VERSION 0.11.14
+ENV TERRAFORM_VERSION 0.12.6
 
 RUN wget -O terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
   && unzip terraform.zip -d /usr/local/bin \
