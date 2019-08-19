@@ -37,9 +37,9 @@ RUN mkdir -p /opt/ansible/modules && \
     cd /opt/ansible/modules/fortimanager-ansible && \
     # Patch as return_values function was removed from Ansible. Diff from PR
     # https://github.com/networktocode/fortimanager-ansible/pull/70/files
-    patch -s -p0 < /tmp/cloud-essentials/patch/70.patch && \
+#    patch -s -p0 < /tmp/cloud-essentials/patch/70.patch && \
     # Patch to support v3 of the API for FortiManager
-    patch -s -p0 < /tmp/cloud-essentials/patch/71.patch && \
+#    patch -s -p0 < /tmp/cloud-essentials/patch/71.patch && \
     # Clean up of patches
     rm -rf /tmp/cloud-essentials
 
