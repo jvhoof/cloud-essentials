@@ -44,14 +44,14 @@ RUN mkdir -p /opt/ansible/modules && \
     rm -rf /tmp/cloud-essentials
 
 # Install Terraform
-ENV TERRAFORM_VERSION 0.12.7
+ENV TERRAFORM_VERSION 0.12.20
 
 RUN wget -O terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
   && unzip terraform.zip -d /usr/local/bin \
   && rm -f terraform.zip
 
 # Install Packer
-ENV PACKER_VERSION 1.4.2
+ENV PACKER_VERSION 1.5.4
 
 RUN wget -O packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip \
   && unzip packer.zip -d /usr/local/bin \
