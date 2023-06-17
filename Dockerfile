@@ -14,8 +14,7 @@ RUN apt-get -y update \
                python3 python3-dev \
                python3-pip python3-venv python3-wheel python3-setuptools python3-psutil libssl-dev libffi-dev
 
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.7 2
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 2
 
 # Install Ansible, Azure CLI, asciinema
 # Dropped support for AWS CLI (has a requirement for colorama version 0.3.7) and AWS doesn't seem to update to the latest version 0.4.1.
@@ -44,14 +43,14 @@ RUN mkdir -p /opt/ansible/modules && \
     rm -rf /tmp/cloud-essentials
 
 # Install Terraform
-ENV TERRAFORM_VERSION 0.14.4
+ENV TERRAFORM_VERSION 1.5.0
 
 RUN wget -O terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
   && unzip terraform.zip -d /usr/local/bin \
   && rm -f terraform.zip
 
 # Install Packer
-ENV PACKER_VERSION 1.6.6
+ENV PACKER_VERSION 1.9.1
 
 RUN wget -O packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip \
   && unzip packer.zip -d /usr/local/bin \
